@@ -1,8 +1,15 @@
 # Documentación de la API de Ítems
 
+
 ## Descripción General
 
 Esta API permite gestionar ítems de un supermercado. Los ítems son representados por la clase `GroceryItem`, que se almacena en MongoDB.
+
+## Acceso a la Interfaz Swagger
+
+Para obtener información más detallada sobre los endpoints de la API, parámetros, respuestas y ejemplos, puedes acceder a la interfaz Swagger a través del siguiente enlace:
+
+**[Interfaz Swagger de la API](http://localhost:8090/swagger-ui/index.html)**
 
 ## Definición de HTTP Verbs
 
