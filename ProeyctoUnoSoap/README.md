@@ -9,7 +9,7 @@ Esta API permite gestionar ítems de un supermercado. Los ítems son representad
 
 Para obtener información más detallada sobre los endpoints de la API, parámetros, respuestas y ejemplos, puedes acceder a la interfaz Swagger a través del siguiente enlace:
 
-**[Interfaz Swagger de la API](http://localhost:8090/swagger-ui/index.html)**
+**http://localhost:8090/swagger-ui/index.html**
 
 ## Definición de HTTP Verbs
 
