@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.validation.Valid;
 
@@ -18,11 +19,12 @@ import javax.validation.Valid;
 public class GetStepApiController implements GetStepApi {
 
     private static final Logger log = LoggerFactory.getLogger(GetStepApiController.class);
-
     private final ResolveEnigmaService resolveEnigmaService;
+    private final WebClient webClient;
 
-    public GetStepApiController(ResolveEnigmaService resolveEnigmaService) {
+    public GetStepApiController(ResolveEnigmaService resolveEnigmaService, WebClient.Builder webClientBuilder) {
         this.resolveEnigmaService = resolveEnigmaService; 
+        this.webClient = webClientBuilder.baseUrl("http://localhost:8091").build();
     }
 
     @Override
@@ -30,9 +32,9 @@ public class GetStepApiController implements GetStepApi {
         return resolveEnigmaService.resolveEnigma(body)
             .doOnNext(response -> {
                 log.info("Enigma resolved successfully: {}", response);
+                callWebhook(response);
             })
             .doOnError(e -> {
-                // Manejo del error
                 log.error("Error while resolving enigma: {}", e.getMessage());
             })
             .map(response -> ResponseEntity.ok(response))
@@ -40,5 +42,16 @@ public class GetStepApiController implements GetStepApi {
                 JsonApiBodyResponseSuccess errorResponse = new JsonApiBodyResponseSuccess();
                 return Mono.just(ResponseEntity.status(424).body(errorResponse)); 
             });
+    }
+
+    private void callWebhook(Object message) {
+        webClient.post()
+            .uri("/webhook") 
+            .bodyValue(message)
+            .retrieve()
+            .bodyToMono(String.class)
+            .doOnSuccess(response -> log.info("Webhook llamado exitosamente: {}", response))
+            .doOnError(error -> log.error("Error llamando al webhook: {}", error.getMessage()))
+            .subscribe();
     }
 }

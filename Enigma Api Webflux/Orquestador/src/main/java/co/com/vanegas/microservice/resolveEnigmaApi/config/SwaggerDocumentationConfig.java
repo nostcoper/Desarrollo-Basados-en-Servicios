@@ -1,15 +1,24 @@
 package co.com.vanegas.microservice.resolveEnigmaApi.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
-
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 
 @Configuration
-class SwaggerDocumentationConfig {
+public class SwaggerDocumentationConfig {
+
+    @Value("${service.step-one.url}")
+    private String stepOneServiceUrl;
+
+    @Value("${service.step-two.url}")
+    private String stepTwoServiceUrl;
+
+    @Value("${service.step-three.url}")
+    private String stepThreeServiceUrl;
 
     @Bean
     OpenAPI customImplementation() {
@@ -26,16 +35,26 @@ class SwaggerDocumentationConfig {
                     .name("Apache 2.0")
                     .url("http://www.apache.org/licenses/LICENSE-2.0.html")));
     }
-   
 
-}
-
-@Configuration
-class WebClientConfig {
-    @Bean
-    WebClient.Builder webClientBuilder() {
+    @Bean(name = "stepOneWebClient")
+    WebClient stepOneWebClient() {
         return WebClient.builder()
-            .baseUrl("http://localhost:8080/v1/getOneEnigma");
+            .baseUrl(stepOneServiceUrl)
+            .build();
+    }
+
+    @Bean(name = "stepTwoWebClient")
+    WebClient stepTwoWebClient() {
+        return WebClient.builder()
+            .baseUrl(stepTwoServiceUrl)
+            .build();
+    }
+
+    @Bean(name = "stepThreeWebClient")
+    WebClient stepThreeWebClient() {
+        return WebClient.builder()
+            .baseUrl(stepThreeServiceUrl)
+            .build();
     }
     
     @Bean
