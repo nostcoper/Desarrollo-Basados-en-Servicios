@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>co.com.vanegas.service.resolveEnigmaApi</groupId>
-    <artifactId>Step-Three-Api</artifactId>
+    <artifactId>Step-One-Api</artifactId>
     <packaging>jar</packaging>
     <name>resolve-enigma-api</name>
     <version>1.0.0</version>
