@@ -1,0 +1,60 @@
+services:
+  orquestador:
+    build: ./Orquestador
+    container_name: orquestador
+    ports:
+      - "8080:8080"
+    networks:
+      - parcial-network
+    depends_on:
+      - step-one-api
+      - step-two-api
+      - step-three-api
+
+  step-one-api:
+    build: ./Step-One-Api
+    container_name: step-one-api
+    ports:
+      - "8081:8081"
+    networks:
+      - parcial-network
+
+  step-two-api:
+    build: ./Step-Two-Api
+    container_name: step-two-api
+    ports:
+      - "8082:8082"
+    networks:
+      - parcial-network
+
+  step-three-api:
+    build: ./Step-Three-Api
+    container_name: step-three-api
+    ports:
+      - "8083:8083"
+    networks:
+      - parcial-network
+
+  webhook:
+    build: ./Webhook
+    container_name: webhook
+    ports:
+      - "8091:8091"
+    networks:
+      - parcial-network
+    depends_on:
+      - orquestador
+
+  batch:
+    build: ./Batch
+    container_name: batch
+    ports:
+      - "8090:8090"
+    networks:
+      - parcial-network
+    depends_on:
+      - orquestador
+
+networks:
+  parcial-network:
+    driver: bridge

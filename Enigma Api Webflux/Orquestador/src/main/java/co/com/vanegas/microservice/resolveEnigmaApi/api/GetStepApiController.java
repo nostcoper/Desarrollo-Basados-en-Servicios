@@ -24,7 +24,7 @@ public class GetStepApiController implements GetStepApi {
 
     public GetStepApiController(ResolveEnigmaService resolveEnigmaService, WebClient.Builder webClientBuilder) {
         this.resolveEnigmaService = resolveEnigmaService; 
-        this.webClient = webClientBuilder.baseUrl("http://localhost:8091").build();
+        this.webClient = webClientBuilder.baseUrl("http://webhook:8091").build();
     }
 
     @Override
