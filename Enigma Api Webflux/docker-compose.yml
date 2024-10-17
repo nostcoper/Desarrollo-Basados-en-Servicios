@@ -1,4 +1,24 @@
+version: '3.8'
+
 services:
+
+  config-server:
+    build: ./Config-Server
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    networks:
+      - parcial-network
+    environment:
+      - SPRING_CLOUD_CONFIG_SERVER_GIT_URI=https://github.com/nostcoper/Desarrollo-Basados-en-Servicios.git
+      - SPRING_CLOUD_CONFIG_SERVER_GIT_SEARCHPATHS=Enigma Api Webflux/Config-repo
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://config-server:8888/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 10s
+      start_period: 30s
+      retries: 5
+
   orquestador:
     build: ./Orquestador
     container_name: orquestador
@@ -7,9 +27,12 @@ services:
     networks:
       - parcial-network
     depends_on:
-      - step-one-api
-      - step-two-api
-      - step-three-api
+      step-one-api:
+        condition: service_healthy
+      step-two-api:
+        condition: service_healthy
+      step-three-api:
+        condition: service_healthy
 
   step-one-api:
     build: ./Step-One-Api
@@ -18,6 +41,14 @@ services:
       - "8081:8081"
     networks:
       - parcial-network
+    depends_on:
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://step-one-api:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
 
   step-two-api:
     build: ./Step-Two-Api
@@ -26,6 +57,14 @@ services:
       - "8082:8082"
     networks:
       - parcial-network
+    depends_on:
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://step-two-api:8082/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
 
   step-three-api:
     build: ./Step-Three-Api
@@ -34,6 +73,14 @@ services:
       - "8083:8083"
     networks:
       - parcial-network
+    depends_on:
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://step-three-api:8083/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
 
   webhook:
     build: ./Webhook
@@ -43,7 +90,13 @@ services:
     networks:
       - parcial-network
     depends_on:
-      - orquestador
+      orquestador:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://webhook:8091/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
 
   batch:
     build: ./Batch
@@ -53,7 +106,13 @@ services:
     networks:
       - parcial-network
     depends_on:
-      - orquestador
+      orquestador:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://batch:8090/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
 
 networks:
   parcial-network:
