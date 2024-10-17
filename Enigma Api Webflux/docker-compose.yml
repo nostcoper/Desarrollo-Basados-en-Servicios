@@ -27,7 +27,7 @@ services:
     networks:
       - parcial-network
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://orquestador:8080/v1/getOneEnigma/getStep/actuator/health || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://orquestador:8080/actuator/health || exit 1"]
       interval: 10s
       timeout: 10s
       start_period: 30s
