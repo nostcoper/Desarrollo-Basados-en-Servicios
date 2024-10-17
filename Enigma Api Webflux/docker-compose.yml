@@ -26,12 +26,14 @@ services:
       - "8080:8080"
     networks:
       - parcial-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://orquestador:8080/v1/getOneEnigma/getStep/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 10s
+      start_period: 30s
+      retries: 5
     depends_on:
-      step-one-api:
-        condition: service_healthy
-      step-two-api:
-        condition: service_healthy
-      step-three-api:
+      config-server:
         condition: service_healthy
 
   step-one-api:
@@ -44,11 +46,7 @@ services:
     depends_on:
       config-server:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://step-one-api:8081/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 10
+
 
   step-two-api:
     build: ./Step-Two-Api
@@ -60,11 +58,7 @@ services:
     depends_on:
       config-server:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://step-two-api:8082/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 10
+
 
   step-three-api:
     build: ./Step-Three-Api
@@ -76,11 +70,7 @@ services:
     depends_on:
       config-server:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://step-three-api:8083/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 10
+
 
   webhook:
     build: ./Webhook
@@ -92,11 +82,7 @@ services:
     depends_on:
       orquestador:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://webhook:8091/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 10
+
 
   batch:
     build: ./Batch
@@ -108,11 +94,7 @@ services:
     depends_on:
       orquestador:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://batch:8090/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 10
+
 
 networks:
   parcial-network:

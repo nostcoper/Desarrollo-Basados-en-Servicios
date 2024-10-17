@@ -14,8 +14,19 @@ COPY ${JAR_FILE} Orquestador-1.0.0.jar
 # Cambia el propietario del archivo JAR
 RUN chown appuser:appgroup Orquestador-1.0.0.jar
 
-# Cambia al usuario no root
+RUN mkdir /app/.jgit && chown appuser:appgroup /app/.jgit
+
+# Cambia temporalmente al usuario root para instalar curl
+USER root
+
+# Actualiza los paquetes y instala curl
+RUN apt-get update && apt-get install -y curl
+
+# Vuelve a cambiar al usuario no root
 USER appuser
+
+# Define el XDG_CONFIG_HOME para JGit
+ENV XDG_CONFIG_HOME=/app/.jgit
 
 # Establece el punto de entrada para la aplicación
 ENTRYPOINT ["java", "-jar", "/app/Orquestador-1.0.0.jar"]
