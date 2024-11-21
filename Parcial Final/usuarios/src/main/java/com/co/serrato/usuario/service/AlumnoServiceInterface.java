@@ -1,12 +1,10 @@
 package com.co.serrato.usuario.service;
 
-import java.util.Optional;
 
-import com.co.serrato.usuario.models.entity.Alumno;
+import com.co.serrato.common.usuario.entity.Alumno;
+import com.co.serrato.commons.service.CommonServiceInterface;
 
-public interface AlumnoServiceInterface {
-	public Iterable<Alumno> findAll();
-	public Optional<Alumno> findById(Long id);
+public interface AlumnoServiceInterface extends CommonServiceInterface<Alumno>{
 	public Alumno save(Alumno alumno);
 	public void deleteById(Long id);
 }

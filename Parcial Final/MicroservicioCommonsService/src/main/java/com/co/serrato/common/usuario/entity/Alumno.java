@@ -1,4 +1,4 @@
-package com.co.serrato.usuario.models.entity;
+package com.co.serrato.common.usuario.entity;
 
 import java.util.Date;
 
@@ -76,7 +76,19 @@ public class Alumno {
         this.createAt = createAt;
     }
 
-    @PrePersist
+    @Override
+	public boolean equals(Object obj) {
+		if(this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Alumno)) {
+			return false;
+		}
+		Alumno alumno = (Alumno) obj;
+		return this.id != null && this.id.equals(alumno.getId());
+	}
+
+	@PrePersist
     private void prePersist() {
         this.createAt = new Date();
     }

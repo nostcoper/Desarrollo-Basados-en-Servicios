@@ -1,32 +1,24 @@
 package com.co.serrato.usuario.service;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
-import com.co.serrato.usuario.models.entity.Alumno;
+import com.co.serrato.common.usuario.entity.Alumno;
+import com.co.serrato.commons.service.CommonService;
 import com.co.serrato.usuario.repository.AlumnoRepository;
 
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class AlumnoService implements AlumnoServiceInterface {
+public class AlumnoService extends CommonService<Alumno> {
 
-    @Autowired 
+    public AlumnoService(CrudRepository<Alumno, Long> dao) {
+		super(dao);
+	}
+
+	@Autowired 
     private AlumnoRepository dao;
-
-    @Override
-    @Transactional(readOnly = true)
-    public Iterable<Alumno> findAll() {
-        return dao.findAll();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Alumno> findById(Long id) {
-        return dao.findById(id);
-    }
 
     @Override
     @Transactional
