@@ -1,0 +1,33 @@
+# Usa una imagen base de JDK
+FROM openjdk:22-jdk-slim
+
+# Crea un usuario no root
+RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
+
+# Establece el directorio de trabajo
+WORKDIR /app
+
+# Copia el archivo JAR en la imagen
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} ConfigServer-1.0.0.jar
+
+# Cambia el propietario del archivo JAR
+RUN chown appuser:appgroup ConfigServer-1.0.0.jar
+
+# Establece un directorio para JGit
+RUN mkdir /app/.jgit && chown appuser:appgroup /app/.jgit
+
+# Cambia temporalmente al usuario root para instalar curl y limpiar el caché
+USER root
+
+# Actualiza los paquetes, instala curl y limpia el caché de apt para reducir el tamaño de la imagen
+RUN apt-get update && apt-get install -y curl && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Vuelve a cambiar al usuario no root
+USER appuser
+
+# Define el XDG_CONFIG_HOME para JGit
+ENV XDG_CONFIG_HOME=/app/.jgit
+
+# Establece el punto de entrada para la aplicación
+ENTRYPOINT ["java", "-jar", "/app/ConfigServer-1.0.0.jar"]

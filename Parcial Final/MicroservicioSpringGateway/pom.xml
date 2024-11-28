@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.co.serrato.gateway</groupId>
-	<artifactId>MicroservicioSpringGateway</artifactId>
+	<artifactId>Microservicio-SpringGateway</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>MicroservicioSpringGateway</name>
+	<name>Microservicio-SpringGateway</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
